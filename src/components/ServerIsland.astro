@@ -1,0 +1,52 @@
+---
+const artificialWait = new Promise((resolve) => {
+  setTimeout(() => resolve(undefined), 1000);
+});
+
+await artificialWait;
+---
+
+<div class="loaded">
+  <p>Loaded</p>
+  <button data-button>Click Me</button>
+</div>
+
+<script>
+  function addButtonListener(message: string) {
+    document.querySelectorAll("[data-button]").forEach((button) => {
+      button.addEventListener("click", () => alert(message));
+    });
+  }
+
+  // This does not work because the button has not been rendered yet
+  document.addEventListener("astro:page-load", () =>
+    addButtonListener("Clicked: not waited for button")
+  );
+
+  // ! Uncomment this line to see it working with await
+
+  // document.addEventListener("astro:page-load", () =>
+  //   setTimeout(() => {
+  //     console.log(document);
+  //     addButtonListener("Clicked: waited for button");
+  //   }, 1100)
+  // );
+
+  addButtonListener("Clicked: Initial load");
+</script>
+
+<style>
+  .loaded {
+    color: white;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    height: 10rem;
+    width: 100%;
+    background-color: green;
+  }
+</style>
